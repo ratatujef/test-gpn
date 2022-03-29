@@ -1,11 +1,13 @@
 <template>
-  <input
-    type="text"
-    class="input"
-    :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
-    placeholder="...type here"
-  />
+  <div class="input-wrapper">
+    <input
+      type="text"
+      class="input"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+      placeholder="...type here"
+    />
+  </div>
 </template>
 
 <script>
@@ -16,8 +18,13 @@ export default {
 };
 </script>
 <style lang="scss">
-.input {
+.input-wrapper {
   width: 100%;
+  text-align: left;
+  flex-grow: 2;
+}
+.input {
+  width: calc(50% - 10px);
   box-sizing: border-box;
   border-radius: 4px;
   border: 2px solid rgb(153, 164, 173);

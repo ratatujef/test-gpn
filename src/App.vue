@@ -1,65 +1,37 @@
 <template>
   <div class="container">
-    <div class="wrapper">
-      <ui-input v-model="searchInput" />
-      <app-character
-        v-for="character in filteredCharacters"
-        :key="character.id"
-        :characterData="character"
-        @pushToAdd="() => addHandler(character.id)"
-      />
+    <div class="btn-group">
+      <router-link to="/" class="button">Home</router-link>
+      <router-link to="/history" class="button">History</router-link>
     </div>
-    <div class="wrapper">
-      <app-character
-        v-for="character in addedCharacters"
-        :key="character.id"
-        :characterData="character"
-      />
-    </div>
+    <router-view :mainData="charactersData" @pushed="pushHandler" />
+    <!-- <main-page :mainData="charactersData" @pushed="pushHandler" /> -->
   </div>
 </template>
 
 <script>
+// import MainPage from "./components/MainPage";
 import getData from "./utils/getDataFromAPI";
-import AppCharacter from "./components/AppCharacter.vue";
-import UiInput from "./components/UiInput.vue";
 export default {
   name: "App",
   async beforeMount() {
     const data = await getData();
     this.charactersData.push(...data);
   },
-
   data() {
     return {
       charactersData: [],
-      searchInput: "",
     };
   },
+  // components: { MainPage },
   methods: {
-    addHandler(id) {
+    pushHandler(id) {
       const index = this.charactersData.findIndex((el) => el.id === id);
-      this.charactersData[index].added = true;
+      this.charactersData[index].added = !this.charactersData[index].added;
     },
   },
-  computed: {
-    filteredCharacters() {
-      return this.charactersData.filter(
-        (data) =>
-          !data.added &&
-          data.name.toLowerCase().includes(this.searchInput.toLowerCase())
-      );
-    },
-    addedCharacters() {
-      return this.charactersData.filter((data) => {
-        return data.added;
-      });
-    },
-  },
-  components: { AppCharacter, UiInput },
   // routing
   // sorting
-  // moving
 };
 </script>
 
@@ -68,19 +40,29 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20px;
   box-sizing: border-box;
 }
 .container {
+  margin: 0 auto;
+  max-width: 1280px;
   display: flex;
-}
-.wrapper {
-  position: relative;
-  width: 50%;
-  display: flex;
-  justify-content: flex-start;
   flex-direction: column;
-  align-items: flex-start;
+}
+.button {
+  border: 2px solid rgb(153, 164, 173);
+  border-radius: 4px;
+  cursor: pointer;
+  background: #fff;
   padding: 1rem;
+  text-transform: uppercase;
+  margin: 0 5px;
+}
+.btn-group {
+  padding: 1rem;
+  display: flex;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>

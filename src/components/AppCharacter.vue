@@ -6,24 +6,39 @@
       :alt="characterData.name"
     />
     <h3>{{ characterData.name }}</h3>
-    <button @click="$emit('pushToAdd')" class="button button--add">+</button>
+    <button @click="clickHandler" class="button" :class="classes"></button>
   </div>
 </template>
 
 <script>
 export default {
   name: "app-character",
-  emits: ["pushToAdd"],
+  emits: ["pushed"],
+
   props: {
     characterData: {
       type: Object,
       required: true,
     },
   },
+  computed: {
+    classes() {
+      return {
+        "button--add": !this.characterData.added,
+        "button--delete": this.characterData.added,
+      };
+    },
+  },
+  methods: {
+    clickHandler() {
+      // const action = this.characterData.added ? "delete" : "add";
+      this.$emit("pushed", this.characterData.id);
+    },
+  },
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .character {
   position: relative;
   display: flex;
@@ -43,16 +58,16 @@ export default {
 }
 .button {
   outline: none;
-  border: 2px solid rgb(153, 164, 173);
-  border-radius: 4px;
-  cursor: pointer;
-  background: #fff;
-  &--add {
-    position: absolute;
-    padding: 1rem 2rem;
-    font-size: 18px;
-    font-weight: bold;
-    right: 1rem;
+  position: absolute;
+  padding: 1rem 2rem;
+  font-size: 18px;
+  font-weight: bold;
+  right: 1rem;
+  &--add:after {
+    content: "+";
+  }
+  &--delete:before {
+    content: "-";
   }
 }
 </style>
