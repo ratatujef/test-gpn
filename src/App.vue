@@ -1,37 +1,40 @@
 <template>
   <div class="container">
     <div class="btn-group">
-      <router-link to="/" class="button">Home</router-link>
-      <router-link to="/history" class="button">History</router-link>
+      <router-link
+        v-for="(path, routeName) in pages"
+        :key="routeName"
+        :to="path"
+        :class="{
+          button: true,
+          'button--active': routeName === active,
+        }"
+        >{{ routeName }}</router-link
+      >
     </div>
-    <router-view :mainData="charactersData" @pushed="pushHandler" />
-    <!-- <main-page :mainData="charactersData" @pushed="pushHandler" /> -->
+    <router-view />
   </div>
 </template>
 
 <script>
-// import MainPage from "./components/MainPage";
 import getData from "./utils/getDataFromAPI";
+
 export default {
   name: "App",
   async beforeMount() {
     const data = await getData();
-    this.charactersData.push(...data);
+    this.$store.commit("ADD_DATA", data);
   },
   data() {
     return {
-      charactersData: [],
+      pages: { home: "/", history: "/history" },
     };
   },
-  // components: { MainPage },
-  methods: {
-    pushHandler(id) {
-      const index = this.charactersData.findIndex((el) => el.id === id);
-      this.charactersData[index].added = !this.charactersData[index].added;
+  computed: {
+    active() {
+      return this.$route.name;
     },
   },
-  // routing
-  // sorting
 };
 </script>
 
@@ -40,8 +43,16 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
+  font-size: 18px;
   margin-top: 20px;
   box-sizing: border-box;
+}
+a,
+a:visited,
+a:active {
+  text-decoration: none;
+  color: #2c3e50;
+  cursor: pointer;
 }
 .container {
   margin: 0 auto;

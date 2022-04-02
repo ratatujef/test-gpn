@@ -13,7 +13,6 @@
 <script>
 export default {
   name: "app-character",
-  emits: ["pushed"],
 
   props: {
     characterData: {
@@ -31,8 +30,7 @@ export default {
   },
   methods: {
     clickHandler() {
-      // const action = this.characterData.added ? "delete" : "add";
-      this.$emit("pushed", this.characterData.id);
+      this.$store.dispatch("CHANGE_ITEM", this.characterData);
     },
   },
 };
@@ -63,6 +61,9 @@ export default {
   font-size: 18px;
   font-weight: bold;
   right: 1rem;
+  &:hover {
+    box-shadow: 0 0 5px 0px #2c3e50;
+  }
   &--add:after {
     content: "+";
   }

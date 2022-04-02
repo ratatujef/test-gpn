@@ -33,5 +33,9 @@ export default {
   color: #2c3e50;
   font-size: 1.25rem;
   font-weight: 500;
+  &:focus {
+    box-shadow: 0 0 5px 0px #2c3e50;
+    outline: none;
+  }
 }
 </style>

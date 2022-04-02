@@ -6,7 +6,6 @@
         v-for="character in filteredCharacters"
         :key="character.id"
         :characterData="character"
-        @pushed="(id) => $emit('pushed', id)"
       />
     </div>
     <div class="column">
@@ -14,41 +13,38 @@
         v-for="character in addedCharacters"
         :key="character.id"
         :characterData="character"
-        @pushed="(id) => $emit('pushed', id)"
       />
     </div>
   </div>
 </template>
 
 <script>
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 import AppCharacter from "./AppCharacter.vue";
 import UiInput from "./UiInput.vue";
 export default {
   name: "Main-Page",
-  props: {
-    mainData: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      searchInput: "",
-    };
-  },
-  computed: {
-    filteredCharacters() {
-      return this.mainData.filter(
-        (data) =>
-          !data.added &&
-          data.name.toLowerCase().includes(this.searchInput.toLowerCase())
-      );
-    },
-    addedCharacters() {
-      return this.mainData.filter((data) => {
-        return data.added;
+
+  setup() {
+    const store = useStore();
+    const searchInput = ref("");
+    const filteredCharacters = computed(() => {
+      return store.state.data?.filter((el) => {
+        return (
+          !el.added &&
+          el.name.toLowerCase().includes(searchInput.value.toLowerCase())
+        );
       });
-    },
+    });
+    const addedCharacters = computed(() =>
+      store.state.data?.filter((el) => el.added)
+    );
+    return {
+      searchInput,
+      filteredCharacters,
+      addedCharacters,
+    };
   },
   components: { AppCharacter, UiInput },
 };
