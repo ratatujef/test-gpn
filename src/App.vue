@@ -7,7 +7,7 @@
         :to="path"
         :class="{
           button: true,
-          'button--active': routeName === active,
+          'button--active': routeName === $route.name,
         }"
         >{{ routeName }}</router-link
       >
@@ -23,17 +23,13 @@ export default {
   name: "App",
   async beforeMount() {
     const data = await getData();
+    if (!data) return;
     this.$store.commit("ADD_DATA", data);
   },
   data() {
     return {
       pages: { home: "/", history: "/history" },
     };
-  },
-  computed: {
-    active() {
-      return this.$route.name;
-    },
   },
 };
 </script>

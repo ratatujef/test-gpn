@@ -1,6 +1,12 @@
 export default async () => {
-  const res = await fetch("https://rickandmortyapi.com/api/character").then(
-    (res) => res.json()
+  const ids = [];
+  while (ids.length < 200) {
+    ids.push(ids.length + 1);
+  }
+  const res = await fetch(
+    `https://rickandmortyapi.com/api/character/[${ids}]/`
   );
-  return res.results;
+  if (res.ok) {
+    return res.json().then((data) => data);
+  } else console.warn("Request error");
 };
