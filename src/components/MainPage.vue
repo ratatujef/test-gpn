@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div v-if="store.state.data.length" class="wrapper">
     <ui-input v-model="searchInput" />
     <div class="column">
       <app-character
@@ -16,6 +16,9 @@
       />
     </div>
   </div>
+  <div v-else>
+    <p>...loading</p>
+  </div>
 </template>
 
 <script>
@@ -29,13 +32,21 @@ export default {
   setup() {
     const store = useStore();
     const searchInput = ref("");
+    const sorting = (a, b) => {
+      return a.name.toLowerCase().match(new RegExp(searchInput.value, "g"))
+        ?.length >
+        b.name.toLowerCase().match(new RegExp(searchInput.value, "g"))?.length
+        ? 1
+        : -1;
+    };
     const filteredCharacters = computed(() => {
-      return store.state.data?.filter((el) => {
+      const list = store.state.data?.filter((el) => {
         return (
           !el.added &&
           el.name.toLowerCase().includes(searchInput.value.toLowerCase())
         );
       });
+      return searchInput.value ? list.sort(sorting) : list;
     });
     const addedCharacters = computed(() =>
       store.state.data?.filter((el) => el.added)
@@ -44,6 +55,7 @@ export default {
       searchInput,
       filteredCharacters,
       addedCharacters,
+      store,
     };
   },
   components: { AppCharacter, UiInput },

@@ -21,12 +21,14 @@ import getData from "./utils/getDataFromAPI";
 
 export default {
   name: "App",
-  async beforeMount() {
-    const data = await getData();
-    if (!data) return;
-    this.$store.commit("ADD_DATA", data);
+  beforeMount() {
+    setTimeout(async () => {
+      const data = await getData();
+      if (!data) return;
+      this.$store.commit("ADD_DATA", data);
+    }, 1000);
   },
-  data() {
+  setup() {
     return {
       pages: { home: "/", history: "/history" },
     };

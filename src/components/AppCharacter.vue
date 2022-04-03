@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
 export default {
   name: "app-character",
 
@@ -20,18 +22,22 @@ export default {
       required: true,
     },
   },
-  computed: {
-    classes() {
+  setup(props) {
+    const store = useStore();
+    const classes = computed(() => {
       return {
-        "button--add": !this.characterData.added,
-        "button--delete": this.characterData.added,
+        "button--add": !props.characterData.added,
+        "button--delete": props.characterData.added,
       };
-    },
-  },
-  methods: {
-    clickHandler() {
-      this.$store.dispatch("CHANGE_ITEM", this.characterData);
-    },
+    });
+    const clickHandler = () => {
+      store.dispatch("CHANGE_ITEM", props.characterData);
+    };
+
+    return {
+      classes,
+      clickHandler,
+    };
   },
 };
 </script>
